@@ -1,5 +1,8 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
+// const core = require('@actions/core');
+// const github = require('@actions/github');
+import { github } from '@actions/github';
+import { core } from '@actions/core';
+
 
 const main = async () => {
   try {
