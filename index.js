@@ -1,4 +1,4 @@
-import { GitHub } from '@actions/github';
+import { getOctokit } from '@actions/github';
 import { getInput, setFailed } from '@actions/core';
 
 
@@ -9,7 +9,7 @@ const main = async () => {
     const pr_number = getInput('pr_number', { required: true });
     const token = getInput('token', { required: true });
 
-    const octokit = new GitHub(token);
+    const octokit = new getOctokit(token);
 
     const { data: changedFiles } = await octokit.rest.pulls.listFiles({
       owner,
