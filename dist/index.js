@@ -8299,6 +8299,125 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 4925:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(5127));
+const github = __importStar(__nccwpck_require__(3134));
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const owner = core.getInput('owner', { required: true });
+        const repo = core.getInput('repo', { required: true });
+        const pr_number = parseInt(core.getInput('pr_number', { required: true }));
+        const token = core.getInput('token', { required: true });
+        const octokit = github.getOctokit(token);
+        const { data: changedFiles } = yield octokit.rest.pulls.listFiles({
+            owner,
+            repo,
+            pull_number: pr_number,
+        });
+        let diffData = {
+            additions: 0,
+            deletions: 0,
+            changes: 0
+        };
+        diffData = changedFiles.reduce((acc, file) => {
+            acc.additions += file.additions;
+            acc.deletions += file.deletions;
+            acc.changes += file.changes;
+            return acc;
+        }, diffData);
+        for (const file of changedFiles) {
+            const fileExtension = file.filename.split('.').pop();
+            switch (fileExtension) {
+                case 'md':
+                    yield octokit.rest.issues.addLabels({
+                        owner,
+                        repo,
+                        issue_number: pr_number,
+                        labels: ['markdown'],
+                    });
+                case 'js':
+                    yield octokit.rest.issues.addLabels({
+                        owner,
+                        repo,
+                        issue_number: pr_number,
+                        labels: ['javascript'],
+                    });
+                case 'yml':
+                    yield octokit.rest.issues.addLabels({
+                        owner,
+                        repo,
+                        issue_number: pr_number,
+                        labels: ['yaml'],
+                    });
+                case 'yaml':
+                    yield octokit.rest.issues.addLabels({
+                        owner,
+                        repo,
+                        issue_number: pr_number,
+                        labels: ['yaml'],
+                    });
+            }
+        }
+        yield octokit.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number: pr_number,
+            body: `
+        Pull Request #${pr_number} has been updated with: \n
+        - ${diffData.changes} changes \n
+        - ${diffData.additions} additions \n
+        - ${diffData.deletions} deletions \n
+      `
+        });
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        }
+    }
+});
+main();
+
+
+/***/ }),
+
 /***/ 2431:
 /***/ ((module) => {
 
@@ -8460,146 +8579,17 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(3134);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5127);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
-
-
-
-
-const main = async () => {
-  try {
-    const owner = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('owner', { required: true });
-    const repo = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('repo', { required: true });
-    const pr_number = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('pr_number', { required: true });
-    const token = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('token', { required: true });
-
-    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.getOctokit(token);
-
-    const { data: changedFiles } = await octokit.rest.pulls.listFiles({
-      owner,
-      repo,
-      pull_number: pr_number,
-    });
-
-    let diffData = {
-      additions: 0,
-      deletions: 0,
-      changes: 0
-    };
-
-    diffData = changedFiles.reduce((acc, file) => {
-      acc.additions += file.additions;
-      acc.deletions += file.deletions;
-      acc.changes += file.changes;
-      return acc;
-    }, diffData);
-
-    for (const file of changedFiles) {
-      const fileExtension = file.filename.split('.').pop();
-      switch (fileExtension) {
-        case 'md':
-          await octokit.rest.issues.addLabels({
-            owner,
-            repo,
-            issue_number: pr_number,
-            labels: ['markdown'],
-          });
-        case 'js':
-          await octokit.rest.issues.addLabels({
-            owner,
-            repo,
-            issue_number: pr_number,
-            labels: ['javascript'],
-          });
-        case 'yml':
-          await octokit.rest.issues.addLabels({
-            owner,
-            repo,
-            issue_number: pr_number,
-            labels: ['yaml'],
-          });
-        case 'yaml':
-          await octokit.rest.issues.addLabels({
-            owner,
-            repo,
-            issue_number: pr_number,
-            labels: ['yaml'],
-          });
-      }
-    }
-
-    await octokit.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number: pr_number,
-      body: `
-        Pull Request #${pr_number} has been updated with: \n
-        - ${diffData.changes} changes \n
-        - ${diffData.additions} additions \n
-        - ${diffData.deletions} deletions \n
-      `
-    });
-  } catch (error) {
-    (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed)(error.message);
-  }
-};
-
-main();
-
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(4925);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;

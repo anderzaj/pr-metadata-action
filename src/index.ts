@@ -1,15 +1,15 @@
-import { getOctokit } from '@actions/github';
-import { getInput, setFailed } from '@actions/core';
+import * as core from '@actions/core'
+import * as github from '@actions/github'
 
 
 const main = async () => {
   try {
-    const owner = getInput('owner', { required: true });
-    const repo = getInput('repo', { required: true });
-    const pr_number = getInput('pr_number', { required: true });
-    const token = getInput('token', { required: true });
+    const owner = core.getInput('owner', { required: true });
+    const repo = core.getInput('repo', { required: true });
+    const pr_number = parseInt(core.getInput('pr_number', { required: true }));
+    const token = core.getInput('token', { required: true });
 
-    const octokit = new getOctokit(token);
+    const octokit = github.getOctokit(token);
 
     const { data: changedFiles } = await octokit.rest.pulls.listFiles({
       owner,
@@ -76,7 +76,9 @@ const main = async () => {
       `
     });
   } catch (error) {
-    setFailed(error.message);
+    if (error instanceof Error) {
+      core.setFailed(error.message)
+    }
   }
 };
 
