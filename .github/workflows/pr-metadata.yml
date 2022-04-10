@@ -10,7 +10,7 @@ jobs:
     name: Leaves comment in PR with PR's metadata
     steps:
       - name: Comment PR
-        uses: link-/pr-metadata-action@master
+        uses: anderzaj/pr-metadata-action@master
         with:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
