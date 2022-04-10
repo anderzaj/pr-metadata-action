@@ -8514,20 +8514,18 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5127);
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_1__);
-// const core = require('@actions/core');
-// const github = require('@actions/github');
 
 
 
 
 const main = async () => {
   try {
-    const owner = _actions_core__WEBPACK_IMPORTED_MODULE_1__.core.getInput('owner', { required: true });
-    const repo = _actions_core__WEBPACK_IMPORTED_MODULE_1__.core.getInput('repo', { required: true });
-    const pr_number = _actions_core__WEBPACK_IMPORTED_MODULE_1__.core.getInput('pr_number', { required: true });
-    const token = _actions_core__WEBPACK_IMPORTED_MODULE_1__.core.getInput('token', { required: true });
+    const owner = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('owner', { required: true });
+    const repo = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('repo', { required: true });
+    const pr_number = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('pr_number', { required: true });
+    const token = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('token', { required: true });
 
-    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.github.GitHub(token);
+    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.GitHub(token);
 
     const { data: changedFiles } = await octokit.rest.pulls.listFiles({
       owner,
@@ -8594,7 +8592,7 @@ const main = async () => {
       `
     });
   } catch (error) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.core.setFailed(error.message);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed)(error.message);
   }
 };
 
