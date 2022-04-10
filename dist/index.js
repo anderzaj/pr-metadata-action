@@ -8517,14 +8517,15 @@ __nccwpck_require__.r(__webpack_exports__);
 
 
 
+
 const main = async () => {
   try {
-    const owner = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('owner', { required: true });
-    const repo = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('repo', { required: true });
-    const pr_number = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('pr_number', { required: true });
-    const token = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('token', { required: true });
+    const owner = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('owner', { required: true });
+    const repo = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('repo', { required: true });
+    const pr_number = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('pr_number', { required: true });
+    const token = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('token', { required: true });
 
-    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.GitHub(token);
+    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.getOctokit(token);
 
     const { data: changedFiles } = await octokit.rest.pulls.listFiles({
       owner,
@@ -8591,7 +8592,7 @@ const main = async () => {
       `
     });
   } catch (error) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(error.message);
+    (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed)(error.message);
   }
 };
 
