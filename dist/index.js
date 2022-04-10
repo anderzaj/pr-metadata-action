@@ -8299,7 +8299,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 4925:
+/***/ 5116:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -8337,83 +8337,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.run = void 0;
 const core = __importStar(__nccwpck_require__(5127));
 const github = __importStar(__nccwpck_require__(3134));
-const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const owner = core.getInput('owner', { required: true });
-        const repo = core.getInput('repo', { required: true });
-        const pr_number = parseInt(core.getInput('pr_number', { required: true }));
-        const token = core.getInput('token', { required: true });
-        const octokit = github.getOctokit(token);
-        const { data: changedFiles } = yield octokit.rest.pulls.listFiles({
-            owner,
-            repo,
-            pull_number: pr_number,
-        });
-        let diffData = {
-            additions: 0,
-            deletions: 0,
-            changes: 0
-        };
-        diffData = changedFiles.reduce((acc, file) => {
-            acc.additions += file.additions;
-            acc.deletions += file.deletions;
-            acc.changes += file.changes;
-            return acc;
-        }, diffData);
-        for (const file of changedFiles) {
-            const fileExtension = file.filename.split('.').pop();
-            switch (fileExtension) {
-                case 'md':
-                    yield octokit.rest.issues.addLabels({
-                        owner,
-                        repo,
-                        issue_number: pr_number,
-                        labels: ['markdown'],
-                    });
-                case 'js':
-                    yield octokit.rest.issues.addLabels({
-                        owner,
-                        repo,
-                        issue_number: pr_number,
-                        labels: ['javascript'],
-                    });
-                case 'yml':
-                    yield octokit.rest.issues.addLabels({
-                        owner,
-                        repo,
-                        issue_number: pr_number,
-                        labels: ['yaml'],
-                    });
-                case 'yaml':
-                    yield octokit.rest.issues.addLabels({
-                        owner,
-                        repo,
-                        issue_number: pr_number,
-                        labels: ['yaml'],
-                    });
+// import * as utils from './utils';
+// import * as handler from './handler';
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const owner = core.getInput('owner', { required: true });
+            const repo = core.getInput('repo', { required: true });
+            const pr_number = parseInt(core.getInput('pr_number', { required: true }));
+            const token = core.getInput('token', { required: true });
+            // const token = core.getInput('repo-token', { required: true });
+            // const configPath = core.getInput('configuration-path', {
+            //   required: true,
+            // });
+            const octokit = github.getOctokit(token);
+            // const { repo, sha } = github.context;
+            // const config = await utils.fetchConfigurationFile(client, {
+            //   owner: repo.owner,
+            //   repo: repo.repo,
+            //   path: configPath,
+            //   ref: sha,
+            // });
+            // await handler.handlePullRequest(client, github.context, config);
+            yield octokit.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pr_number,
+                body: `
+        Hello world :wave:
+      `
+            });
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                core.setFailed(error.message);
             }
         }
-        yield octokit.rest.issues.createComment({
-            owner,
-            repo,
-            issue_number: pr_number,
-            body: `
-        Pull Request #${pr_number} has been updated with: \n
-        - ${diffData.changes} changes \n
-        - ${diffData.additions} additions \n
-        - ${diffData.deletions} deletions \n
-      `
-        });
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            core.setFailed(error.message);
-        }
-    }
-});
-main();
+    });
+}
+exports.run = run;
 
 
 /***/ }),
@@ -8588,7 +8553,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4925);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(5116);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
