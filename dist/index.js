@@ -8525,7 +8525,7 @@ const main = async () => {
     const pr_number = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('pr_number', { required: true });
     const token = (0,_actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput)('token', { required: true });
 
-    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.GitHub(token);
+    const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_0__.getOctokit(token);
 
     const { data: changedFiles } = await octokit.rest.pulls.listFiles({
       owner,
