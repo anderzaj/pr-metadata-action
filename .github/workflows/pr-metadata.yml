@@ -1,0 +1,18 @@
+name: Metadata PR Comment
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  comment-pr:
+    runs-on: ubuntu-latest
+    name: Leaves comment in PR with PR's metadata
+    steps:
+      - name: Comment PR
+        uses: link-/pr-metadata-action@master
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pr_number: ${{ github.event.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
