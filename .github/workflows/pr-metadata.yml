@@ -14,6 +14,6 @@ jobs:
         with:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
-          pr_number: ${{ github.event.number }}
+          pr-number: ${{ github.event.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
-					# configuration_path: ".github/assign_reviewers.yml"
+          configuration-path: ".github/assign_reviewers.yml"
