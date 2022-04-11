@@ -1,0 +1,19 @@
+addReviewers: true
+
+addAssignees: author
+
+numberOfReviewers: 1
+
+useReviewGroups: true
+
+reviewGroups:
+  groupA:
+    - anderzaj
+    - Mnfriedl
+    - felipeumanzor
+  groupB:
+    - bimartinez
+    - VicenteMerino
+    - nmassardot
+
+useAssigneeGroups: false
