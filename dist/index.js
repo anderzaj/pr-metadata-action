@@ -29707,9 +29707,13 @@ function handlePullRequest(client, context, config) {
                 }
             }
         }
+        let unavailableUsers = [];
+        if (availabilityExceptions !== undefined) {
+            unavailableUsers = utils.getUnavailableUsers(availabilityExceptions);
+        }
         if (addReviewers) {
             try {
-                const reviewers = utils.chooseReviewers(owner, config);
+                const reviewers = utils.chooseReviewers(owner, config, unavailableUsers);
                 if (reviewers.length > 0) {
                     yield pr.addReviewers(reviewers);
                     core.info(`Added reviewers to PR #${number}: ${reviewers.join(', ')}`);
@@ -29726,7 +29730,7 @@ function handlePullRequest(client, context, config) {
         }
         if (addAssignees) {
             try {
-                const assignees = utils.chooseAssignees(owner, config);
+                const assignees = utils.chooseAssignees(owner, config, unavailableUsers);
                 if (assignees.length > 0) {
                     yield pr.addAssignees(assignees);
                     core.info(`Added assignees to PR #${number}: ${assignees.join(', ')}`);
@@ -29967,13 +29971,9 @@ function getUnavailableUsers(availabilityExceptions) {
     return unavailableUsers;
 }
 exports.getUnavailableUsers = getUnavailableUsers;
-function chooseReviewers(owner, config) {
-    const { useReviewGroups, reviewGroups, numberOfReviewers, reviewers, availabilityExceptions, } = config;
+function chooseReviewers(owner, config, unavailableUsers) {
+    const { useReviewGroups, reviewGroups, numberOfReviewers, reviewers } = config;
     const useGroups = useReviewGroups && Object.keys(reviewGroups).length > 0;
-    let unavailableUsers = [];
-    if (availabilityExceptions !== undefined) {
-        unavailableUsers = getUnavailableUsers(availabilityExceptions);
-    }
     let chosenReviewers = [];
     if (useGroups) {
         chosenReviewers = chooseUsersFromGroups(owner, reviewGroups, numberOfReviewers, unavailableUsers);
@@ -29984,13 +29984,9 @@ function chooseReviewers(owner, config) {
     return chosenReviewers;
 }
 exports.chooseReviewers = chooseReviewers;
-function chooseAssignees(owner, config) {
-    const { useAssigneeGroups, assigneeGroups, addAssignees, numberOfAssignees, numberOfReviewers, assignees, reviewers, availabilityExceptions, } = config;
+function chooseAssignees(owner, config, unavailableUsers) {
+    const { useAssigneeGroups, assigneeGroups, addAssignees, numberOfAssignees, numberOfReviewers, assignees, reviewers } = config;
     const useGroups = useAssigneeGroups && Object.keys(assigneeGroups).length > 0;
-    let unavailableUsers = [];
-    if (availabilityExceptions !== undefined) {
-        unavailableUsers = getUnavailableUsers(availabilityExceptions);
-    }
     let chosenAssignees = [];
     if (typeof addAssignees === 'string') {
         if (addAssignees !== 'author') {
@@ -30010,7 +30006,7 @@ function chooseAssignees(owner, config) {
 exports.chooseAssignees = chooseAssignees;
 function chooseUsers(candidates, desiredNumber, filterUser = '', unavailableUsers) {
     const filteredCandidates = candidates.filter((reviewer) => {
-        return reviewer !== filterUser;
+        return reviewer !== filterUser && !unavailableUsers.includes(reviewer);
     });
     // all-assign
     if (desiredNumber === 0) {

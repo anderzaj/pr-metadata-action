@@ -28,22 +28,17 @@ export function getUnavailableUsers(
   return unavailableUsers;
 }
 
-export function chooseReviewers(owner: string, config: Config): string[] {
+export function chooseReviewers(
+  owner: string, config: Config, unavailableUsers: string[]
+): string[] {
   const {
     useReviewGroups,
     reviewGroups,
     numberOfReviewers,
-    reviewers,
-    availabilityExceptions,
+    reviewers
   } = config;
 
   const useGroups: boolean = useReviewGroups && Object.keys(reviewGroups).length > 0;
-
-  let unavailableUsers: string[] = [];
-
-  if (availabilityExceptions !== undefined) {
-    unavailableUsers = getUnavailableUsers(availabilityExceptions);
-  }
 
   let chosenReviewers: string[] = [];
 
@@ -66,7 +61,9 @@ export function chooseReviewers(owner: string, config: Config): string[] {
   return chosenReviewers;
 }
 
-export function chooseAssignees(owner: string, config: Config): string[] {
+export function chooseAssignees(
+  owner: string, config: Config, unavailableUsers: string[]
+): string[] {
   const {
     useAssigneeGroups,
     assigneeGroups,
@@ -74,17 +71,10 @@ export function chooseAssignees(owner: string, config: Config): string[] {
     numberOfAssignees,
     numberOfReviewers,
     assignees,
-    reviewers,
-    availabilityExceptions,
+    reviewers
   } = config;
 
   const useGroups: boolean = useAssigneeGroups && Object.keys(assigneeGroups).length > 0;
-
-  let unavailableUsers: string[] = [];
-
-  if (availabilityExceptions !== undefined) {
-    unavailableUsers = getUnavailableUsers(availabilityExceptions);
-  }
 
   let chosenAssignees: string[] = [];
 
@@ -122,7 +112,7 @@ export function chooseUsers(
   unavailableUsers: string[]
 ): string[] {
   const filteredCandidates = candidates.filter((reviewer: string): boolean => {
-    return reviewer !== filterUser;
+    return reviewer !== filterUser && !unavailableUsers.includes(reviewer);
   });
 
   // all-assign

@@ -101,9 +101,14 @@ export async function handlePullRequest(
     }
   }
 
+  let unavailableUsers: string[] = [];
+  if (availabilityExceptions !== undefined) {
+    unavailableUsers = utils.getUnavailableUsers(availabilityExceptions);
+  }
+
   if (addReviewers) {
     try {
-      const reviewers = utils.chooseReviewers(owner, config);
+      const reviewers = utils.chooseReviewers(owner, config, unavailableUsers);
 
       if (reviewers.length > 0) {
         await pr.addReviewers(reviewers);
@@ -120,7 +125,7 @@ export async function handlePullRequest(
 
   if (addAssignees) {
     try {
-      const assignees = utils.chooseAssignees(owner, config);
+      const assignees = utils.chooseAssignees(owner, config, unavailableUsers);
 
       if (assignees.length > 0) {
         await pr.addAssignees(assignees);
