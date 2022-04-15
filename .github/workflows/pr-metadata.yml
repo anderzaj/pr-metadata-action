@@ -13,5 +13,4 @@ jobs:
         uses: anderzaj/pr-metadata-action@master
         with:
           pr-number: ${{ github.event.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: ".github/assign_reviewers.yml"
