@@ -9,6 +9,7 @@ useReviewGroups: true
 reviewGroups:
   groupA:
     - anderzaj
+    - bimartinez
   groupB:
     - nmassardot
 
@@ -19,5 +20,6 @@ availabilityExceptions:
     - nmassardot
   friday:
     - nmassardot
+    - bimartinez
 
 useAssigneeGroups: false
