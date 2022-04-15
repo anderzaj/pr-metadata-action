@@ -12,4 +12,12 @@ reviewGroups:
   groupB:
     - nmassardot
 
+availabilityExceptions:
+  monday:
+    - nmassardot
+  wednesday:
+    - nmassardot
+  friday:
+    - nmassardot
+
 useAssigneeGroups: false

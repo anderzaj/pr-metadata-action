@@ -1,9 +1,8 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
-import { Context } from '@actions/github/lib/context';
 import * as utils from './utils';
-import { PullRequest } from './pr';
+import { Context } from '@actions/github/lib/context';
 import { PullRequestEvent } from '@octokit/webhooks-types';
+import { PullRequest } from './pr';
 import { Client } from './types'
 
 export interface Config {
@@ -22,6 +21,7 @@ export interface Config {
   useAssigneeGroups: boolean;
   reviewGroups: { [key: string]: string[] };
   assigneeGroups: { [key: string]: string[] };
+  availabilityExceptions: { [key: string]: string[] };
   runOnDraft?: boolean;
 }
 
@@ -41,6 +41,7 @@ export async function handlePullRequest(
     useReviewGroups,
     useAssigneeGroups,
     reviewGroups,
+    availabilityExceptions,
     assigneeGroups,
     addReviewers,
     addAssignees,
