@@ -15,9 +15,12 @@ reviewGroups:
 availabilityExceptions:
   monday:
     - nmassardot
+    - bimartinez
   wednesday:
     - nmassardot
+    - bimartinez
   friday:
     - nmassardot
+    - bimartinez
 
 useAssigneeGroups: false
