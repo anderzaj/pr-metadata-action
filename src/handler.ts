@@ -104,6 +104,7 @@ export async function handlePullRequest(
   let unavailableUsers: string[] = [];
   if (availabilityExceptions !== undefined) {
     unavailableUsers = utils.getUnavailableUsers(availabilityExceptions);
+    core.info(`Unavailable users today: ${unavailableUsers}`);
   }
 
   if (addReviewers) {

@@ -23,8 +23,6 @@ export function getUnavailableUsers(
 
   const unavailableUsers = availabilityExceptions[dayOfWeek];
 
-  core.info(`Unavailable users for ${dayOfWeek}: ${unavailableUsers}`);
-
   return unavailableUsers;
 }
 
