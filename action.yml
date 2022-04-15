@@ -2,10 +2,6 @@ name: "Pull Request Assigner"
 description: "Add reviewers to pull requests when pull requests are opened"
 
 inputs:
-  owner:
-    description: "Repo owner"
-    default: ${{ github.repository_owner }}
-    required: false
   pr-number:
     description: "The number of the new PR"
     required: true

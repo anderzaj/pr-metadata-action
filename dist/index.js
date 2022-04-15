@@ -29669,10 +29669,8 @@ const utils = __importStar(__nccwpck_require__(8149));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const owner = core.getInput('owner', { required: true });
-            // const repo = core.getInput('repo', { required: true });
             const prNumber = parseInt(core.getInput('pr-number', { required: true }));
-            const token = core.getInput('token', { required: true });
+            const token = core.getInput('repo-token', { required: true });
             const configPath = core.getInput('configuration-path', {
                 required: true,
             });
@@ -29687,7 +29685,7 @@ function run() {
             const { skipKeywords, useReviewGroups, useAssigneeGroups, reviewGroups, assigneeGroups, addReviewers, addAssignees, filterLabels, runOnDraft, } = config;
             // await handler.handlePullRequest(client, github.context, config);
             yield client.rest.issues.createComment({
-                owner,
+                owner: repo.owner,
                 repo: repo.repo,
                 issue_number: prNumber,
                 body: `
@@ -29702,7 +29700,6 @@ function run() {
         ${filterLabels}
         ${runOnDraft}
         ${repo.owner}
-        ${owner}
       `
             });
         }
