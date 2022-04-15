@@ -8346,30 +8346,32 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const owner = core.getInput('owner', { required: true });
-            const repo = core.getInput('repo', { required: true });
+            // const repo = core.getInput('repo', { required: true });
             const prNumber = parseInt(core.getInput('pr-number', { required: true }));
             const token = core.getInput('token', { required: true });
             const configPath = core.getInput('configuration-path', {
                 required: true,
             });
             const octokit = github.getOctokit(token);
-            // const config = await utils.fetchConfigurationFile(client, {
+            const { repo, sha } = github.context;
+            // const config = await utils.fetchConfigurationFile(octokit, {
             //   owner: repo.owner,
             //   repo: repo.repo,
             //   path: configPath,
             //   ref: sha,
             // });
-            // await handler.handlePullRequest(client, github.context, config);
+            // await handler.handlePullRequest(octokit, github.context, config);
             yield octokit.rest.issues.createComment({
                 owner,
-                repo,
+                repo: repo.repo,
                 issue_number: prNumber,
                 body: `
         Hello world :wave:
         ${configPath}
         ${prNumber}
-        ${repo}
+        ${repo.owner}
         ${owner}
+        ${typeof octokit}
       `
             });
         }
