@@ -31,7 +31,7 @@ See below for details:
 - [Events that trigger workflows / Pull request events for forked repositories - GitHub Docs](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#pull-request-events-for-forked-repositories)
 
 ```diff
-name: 'Auto Assign'
+name: 'Pull Request Assigner'
  on:
 -  pull_request:
 +  pull_request_target:
