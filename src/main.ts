@@ -5,10 +5,8 @@ import * as handler from './handler';
 
 export async function run() {
   try {
-    const owner = core.getInput('owner', { required: true });
-    // const repo = core.getInput('repo', { required: true });
     const prNumber = parseInt(core.getInput('pr-number', { required: true }));
-    const token = core.getInput('token', { required: true });
+    const token = core.getInput('repo-token', { required: true });
     const configPath = core.getInput('configuration-path', {
       required: true,
     });
@@ -39,7 +37,7 @@ export async function run() {
     // await handler.handlePullRequest(client, github.context, config);
 
     await client.rest.issues.createComment({
-      owner,
+      owner: repo.owner,
       repo: repo.repo,
       issue_number: prNumber,
       body: `
@@ -54,7 +52,6 @@ export async function run() {
         ${filterLabels}
         ${runOnDraft}
         ${repo.owner}
-        ${owner}
       `
     });
   } catch (error) {

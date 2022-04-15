@@ -9,11 +9,7 @@ useReviewGroups: true
 reviewGroups:
   groupA:
     - anderzaj
-    - Mnfriedl
-    - felipeumanzor
   groupB:
-    - bimartinez
-    - VicenteMerino
     - nmassardot
 
 useAssigneeGroups: false

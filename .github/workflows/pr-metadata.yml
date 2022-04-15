@@ -1,19 +1,17 @@
-name: Metadata PR Comment
+name: Pull Request Assigner
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 
 jobs:
-  comment-pr:
+  assigner:
     runs-on: ubuntu-latest
-    name: Leaves comment in PR with PR's metadata
+    name: Assign
     steps:
-      - name: Comment PR
+      - name: Assign
         uses: anderzaj/pr-metadata-action@master
         with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
           pr-number: ${{ github.event.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: ".github/assign_reviewers.yml"

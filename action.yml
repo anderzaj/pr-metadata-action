@@ -1,20 +1,22 @@
-name: "PR Metadata Action"
-description: "Add pull request file changes as a comment to a newly created PR"
+name: "Pull Request Assigner"
+description: "Add reviewers to pull requests when pull requests are opened"
 
 inputs:
-  owner:
-    description: "The owner of the repo"
-    required: true
-  repo:
-    description: "The name of the repo"
-    required: true
   pr_number:
     description: "The number of the new PR"
     required: true
-  token:
-    description: "The token to use to access the GH API"
-    required: true
+  repo-token:
+    description: "A token for the repo"
+    default: ${{ github.token }}
+    required: false
+  configuration-path:
+    description: "A path for the auto-assign configuration"
+    default: "".github/auto_assign.yml"
 
 runs:
   using: "node16"
   main: "dist/index.js"
+
+branding:
+  icon: "user-plus"
+  color: "blue"
