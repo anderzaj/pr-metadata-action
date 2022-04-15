@@ -10,7 +10,7 @@ jobs:
     name: Assign
     steps:
       - name: Assign
-        uses: anderzaj/pr-metadata-action@master
+        uses: examedi/pull-request-assigner@master
         with:
           pr-number: ${{ github.event.number }}
           configuration-path: ".github/assign_reviewers.yml"
