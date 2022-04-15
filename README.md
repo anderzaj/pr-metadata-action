@@ -1,4 +1,4 @@
-# Auto Assign Action
+# Pull Request Assigner
 
 An action which adds reviewers to the pull request when the pull request is opened.
 
