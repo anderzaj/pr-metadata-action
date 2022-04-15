@@ -1,9 +1,32 @@
 import _ from 'lodash';
-import * as github from '@actions/github';
+import * as core from '@actions/core';
 import * as yaml from 'js-yaml';
 import { Client } from './types';
 import { Config } from './handler';
 
+const weekdayMap = {
+  0: "sunday",
+  1: "monday",
+  2: "tuesday",
+  3: "wednesday",
+  4: "thursday",
+  5: "friday",
+  6: "saturday",
+}
+
+export function getUnavailableUsers(
+  availabilityExceptions: { [key: string]: string[] }
+): string[] {
+  const d = new Date();
+  const day = d.getDay()
+  const dayOfWeek = weekdayMap[day];
+
+  const unavailableUsers = availabilityExceptions[dayOfWeek];
+
+  core.info(`Unavailable users for ${dayOfWeek}: ${unavailableUsers}`);
+
+  return unavailableUsers;
+}
 
 export function chooseReviewers(owner: string, config: Config): string[] {
   const {
@@ -11,19 +34,33 @@ export function chooseReviewers(owner: string, config: Config): string[] {
     reviewGroups,
     numberOfReviewers,
     reviewers,
+    availabilityExceptions,
   } = config;
+
+  const useGroups: boolean = useReviewGroups && Object.keys(reviewGroups).length > 0;
+
+  let unavailableUsers: string[] = [];
+
+  if (availabilityExceptions !== undefined) {
+    unavailableUsers = getUnavailableUsers(availabilityExceptions);
+  }
+
   let chosenReviewers: string[] = [];
-  const useGroups: boolean =
-    useReviewGroups && Object.keys(reviewGroups).length > 0;
 
   if (useGroups) {
     chosenReviewers = chooseUsersFromGroups(
       owner,
       reviewGroups,
-      numberOfReviewers
+      numberOfReviewers,
+      unavailableUsers
     );
   } else {
-    chosenReviewers = chooseUsers(reviewers, numberOfReviewers, owner);
+    chosenReviewers = chooseUsers(
+      reviewers,
+      numberOfReviewers,
+      owner,
+      unavailableUsers
+    );
   }
 
   return chosenReviewers;
@@ -38,11 +75,18 @@ export function chooseAssignees(owner: string, config: Config): string[] {
     numberOfReviewers,
     assignees,
     reviewers,
+    availabilityExceptions,
   } = config;
-  let chosenAssignees: string[] = [];
 
-  const useGroups: boolean =
-    useAssigneeGroups && Object.keys(assigneeGroups).length > 0;
+  const useGroups: boolean = useAssigneeGroups && Object.keys(assigneeGroups).length > 0;
+
+  let unavailableUsers: string[] = [];
+
+  if (availabilityExceptions !== undefined) {
+    unavailableUsers = getUnavailableUsers(availabilityExceptions);
+  }
+
+  let chosenAssignees: string[] = [];
 
   if (typeof addAssignees === 'string') {
     if (addAssignees !== 'author') {
@@ -55,14 +99,16 @@ export function chooseAssignees(owner: string, config: Config): string[] {
     chosenAssignees = chooseUsersFromGroups(
       owner,
       assigneeGroups,
-      numberOfAssignees || numberOfReviewers
+      numberOfAssignees || numberOfReviewers,
+      unavailableUsers
     );
   } else {
     const candidates = assignees ? assignees : reviewers;
     chosenAssignees = chooseUsers(
       candidates,
       numberOfAssignees || numberOfReviewers,
-      owner
+      owner,
+      unavailableUsers
     );
   }
 
@@ -72,7 +118,8 @@ export function chooseAssignees(owner: string, config: Config): string[] {
 export function chooseUsers(
   candidates: string[],
   desiredNumber: number,
-  filterUser: string = ''
+  filterUser: string = '',
+  unavailableUsers: string[]
 ): string[] {
   const filteredCandidates = candidates.filter((reviewer: string): boolean => {
     return reviewer !== filterUser;
@@ -102,12 +149,15 @@ export function includesSkipKeywords(
 export function chooseUsersFromGroups(
   owner: string,
   groups: { [key: string]: string[] } | undefined,
-  desiredNumber: number
+  desiredNumber: number,
+  unavailableUsers: string[]
 ): string[] {
   let users: string[] = [];
+
   for (const group in groups) {
-    users = users.concat(chooseUsers(groups[group], desiredNumber, owner));
+    users = users.concat(chooseUsers(groups[group], desiredNumber, owner, unavailableUsers));
   }
+
   return users;
 }
 

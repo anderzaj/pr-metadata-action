@@ -108,6 +108,8 @@ export async function handlePullRequest(
       if (reviewers.length > 0) {
         await pr.addReviewers(reviewers);
         core.info(`Added reviewers to PR #${number}: ${reviewers.join(', ')}`);
+      } else {
+        core.info(`No reviewers available, no reviews requested.`);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -123,6 +125,8 @@ export async function handlePullRequest(
       if (assignees.length > 0) {
         await pr.addAssignees(assignees);
         core.info(`Added assignees to PR #${number}: ${assignees.join(', ')}`);
+      } else {
+        core.info(`No possible assignees available, no one assigned.`);
       }
     } catch (error) {
       if (error instanceof Error) {
