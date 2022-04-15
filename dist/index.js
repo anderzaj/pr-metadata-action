@@ -29674,7 +29674,6 @@ function handlePullRequest(client, context, config) {
         const { pull_request: event } = context.payload;
         const { title, draft, user, number } = event;
         const { skipKeywords, useReviewGroups, useAssigneeGroups, reviewGroups, availabilityExceptions, assigneeGroups, addReviewers, addAssignees, filterLabels, runOnDraft, } = config;
-        core.info(JSON.stringify(config));
         if (skipKeywords && utils.includesSkipKeywords(title, skipKeywords)) {
             core.info('Skips the process to add reviewers/assignees since PR title includes skip-keywords');
             return;
@@ -29799,7 +29798,6 @@ const handler = __importStar(__nccwpck_require__(8726));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const prNumber = parseInt(core.getInput('pr-number', { required: true }));
             const token = core.getInput('repo-token', { required: true });
             const configPath = core.getInput('configuration-path', {
                 required: true,
