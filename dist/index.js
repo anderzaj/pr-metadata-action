@@ -29710,6 +29710,7 @@ function handlePullRequest(client, context, config) {
         let unavailableUsers = [];
         if (availabilityExceptions !== undefined) {
             unavailableUsers = utils.getUnavailableUsers(availabilityExceptions);
+            core.info(`Unavailable users today: ${unavailableUsers}`);
         }
         if (addReviewers) {
             try {
@@ -29951,7 +29952,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.fetchConfigurationFile = exports.chooseUsersFromGroups = exports.includesSkipKeywords = exports.chooseUsers = exports.chooseAssignees = exports.chooseReviewers = exports.getUnavailableUsers = void 0;
 const lodash_1 = __importDefault(__nccwpck_require__(5817));
-const core = __importStar(__nccwpck_require__(5127));
 const yaml = __importStar(__nccwpck_require__(9818));
 const weekdayMap = {
     0: "sunday",
@@ -29967,7 +29967,6 @@ function getUnavailableUsers(availabilityExceptions) {
     const day = d.getDay();
     const dayOfWeek = weekdayMap[day];
     const unavailableUsers = availabilityExceptions[dayOfWeek];
-    core.info(`Unavailable users for ${dayOfWeek}: ${unavailableUsers}`);
     return unavailableUsers;
 }
 exports.getUnavailableUsers = getUnavailableUsers;
