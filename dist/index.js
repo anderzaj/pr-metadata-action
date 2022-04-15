@@ -29673,7 +29673,7 @@ function handlePullRequest(client, context, config) {
         }
         const { pull_request: event } = context.payload;
         const { title, draft, user, number } = event;
-        const { skipKeywords, useReviewGroups, useAssigneeGroups, reviewGroups, assigneeGroups, addReviewers, addAssignees, filterLabels, runOnDraft, } = config;
+        const { skipKeywords, useReviewGroups, useAssigneeGroups, reviewGroups, availabilityExceptions, assigneeGroups, addReviewers, addAssignees, filterLabels, runOnDraft, } = config;
         core.info(JSON.stringify(config));
         if (skipKeywords && utils.includesSkipKeywords(title, skipKeywords)) {
             core.info('Skips the process to add reviewers/assignees since PR title includes skip-keywords');
