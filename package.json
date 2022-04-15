@@ -1,5 +1,5 @@
 {
-  "name": "pr-metadata-action",
+  "name": "pull-request-assigner",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anderzaj/pr-metadata-action.git"
+    "url": "git+https://github.com/anderzaj/pull-request-assigner.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/anderzaj/pr-metadata-action/issues"
+    "url": "https://github.com/anderzaj/pull-request-assigner/issues"
   },
-  "homepage": "https://github.com/anderzaj/pr-metadata-action#readme",
+  "homepage": "https://github.com/anderzaj/pull-request-assigner#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.1",
