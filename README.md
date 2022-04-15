@@ -1,1 +1,1 @@
-Hello world :wave: :wave:
+Hello world :wave:
