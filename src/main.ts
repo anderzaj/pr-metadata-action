@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-// import * as utils from './utils';
-// import * as handler from './handler';
+import * as utils from './utils';
+import * as handler from './handler';
 
 export async function run() {
   try {
@@ -13,30 +13,48 @@ export async function run() {
       required: true,
     });
 
-    const octokit = github.getOctokit(token);
+    const client = github.getOctokit(token);
 
     const { repo, sha } = github.context
 
-    // const config = await utils.fetchConfigurationFile(octokit, {
-    //   owner: repo.owner,
-    //   repo: repo.repo,
-    //   path: configPath,
-    //   ref: sha,
-    // });
+    const config = await utils.fetchConfigurationFile(client, {
+      owner: repo.owner,
+      repo: repo.repo,
+      path: configPath,
+      ref: sha,
+    });
 
-    // await handler.handlePullRequest(octokit, github.context, config);
+    const {
+      skipKeywords,
+      useReviewGroups,
+      useAssigneeGroups,
+      reviewGroups,
+      assigneeGroups,
+      addReviewers,
+      addAssignees,
+      filterLabels,
+      runOnDraft,
+    } = config as handler.Config;
 
-    await octokit.rest.issues.createComment({
+    // await handler.handlePullRequest(client, github.context, config);
+
+    await client.rest.issues.createComment({
       owner,
       repo: repo.repo,
       issue_number: prNumber,
       body: `
         Hello world :wave:
-        ${configPath}
-        ${prNumber}
+        ${skipKeywords}
+        ${useReviewGroups}
+        ${useAssigneeGroups}
+        ${reviewGroups}
+        ${assigneeGroups}
+        ${addReviewers}
+        ${addAssignees}
+        ${filterLabels}
+        ${runOnDraft}
         ${repo.owner}
         ${owner}
-        ${typeof octokit}
       `
     });
   } catch (error) {
