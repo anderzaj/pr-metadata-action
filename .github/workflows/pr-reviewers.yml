@@ -2,7 +2,7 @@ name: Pull Request Assigner
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened]
 
 jobs:
   assigner:
@@ -10,6 +10,6 @@ jobs:
     name: Assign
     steps:
       - name: Assign
-        uses: anderzaj/pull-request-assigner@master
+        uses: examedi/pull-request-assigner@master
         with:
           configuration-path: ".github/assign_reviewers.yml"
