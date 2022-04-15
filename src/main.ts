@@ -20,40 +20,9 @@ export async function run() {
       repo: repo.repo,
       path: configPath,
       ref: sha,
-    });
+    }) as handler.Config;
 
-    const {
-      skipKeywords,
-      useReviewGroups,
-      useAssigneeGroups,
-      reviewGroups,
-      assigneeGroups,
-      addReviewers,
-      addAssignees,
-      filterLabels,
-      runOnDraft,
-    } = config as handler.Config;
-
-    // await handler.handlePullRequest(client, github.context, config);
-
-    await client.rest.issues.createComment({
-      owner: repo.owner,
-      repo: repo.repo,
-      issue_number: prNumber,
-      body: `
-        Hello world :wave:
-        ${skipKeywords}
-        ${useReviewGroups}
-        ${useAssigneeGroups}
-        ${reviewGroups}
-        ${assigneeGroups}
-        ${addReviewers}
-        ${addAssignees}
-        ${filterLabels}
-        ${runOnDraft}
-        ${repo.owner}
-      `
-    });
+    await handler.handlePullRequest(client, github.context, config);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

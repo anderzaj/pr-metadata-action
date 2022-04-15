@@ -29624,6 +29624,124 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 8726:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.handlePullRequest = void 0;
+const core = __importStar(__nccwpck_require__(5127));
+const utils = __importStar(__nccwpck_require__(8149));
+const pr_1 = __nccwpck_require__(3913);
+function handlePullRequest(client, context, config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!context.payload.pull_request) {
+            throw new Error('the webhook payload does not exist');
+        }
+        const { pull_request: event } = context.payload;
+        const { title, draft, user, number } = event;
+        const { skipKeywords, useReviewGroups, useAssigneeGroups, reviewGroups, assigneeGroups, addReviewers, addAssignees, filterLabels, runOnDraft, } = config;
+        core.info(JSON.stringify(config));
+        if (skipKeywords && utils.includesSkipKeywords(title, skipKeywords)) {
+            core.info('Skips the process to add reviewers/assignees since PR title includes skip-keywords');
+            return;
+        }
+        if (!runOnDraft && draft) {
+            core.info('Skips the process to add reviewers/assignees since PR type is draft');
+            return;
+        }
+        if (useReviewGroups && !reviewGroups) {
+            throw new Error("Error in configuration file to do with using review groups. Expected 'reviewGroups' variable to be set because the variable 'useReviewGroups' = true.");
+        }
+        if (useAssigneeGroups && !assigneeGroups) {
+            throw new Error("Error in configuration file to do with using review groups. Expected 'assigneeGroups' variable to be set because the variable 'useAssigneeGroups' = true.");
+        }
+        const owner = user.login;
+        const pr = new pr_1.PullRequest(client, context);
+        if (filterLabels !== undefined) {
+            if (filterLabels.include !== undefined && filterLabels.include.length > 0) {
+                const hasLabels = pr.hasAnyLabel(filterLabels.include);
+                if (!hasLabels) {
+                    core.info('Skips the process to add reviewers/assignees since PR is not tagged with any of the filterLabels.include');
+                    return;
+                }
+            }
+            if (filterLabels.exclude !== undefined && filterLabels.exclude.length > 0) {
+                const hasLabels = pr.hasAnyLabel(filterLabels.exclude);
+                if (hasLabels) {
+                    core.info('Skips the process to add reviewers/assignees since PR is tagged with any of the filterLabels.exclude');
+                    return;
+                }
+            }
+        }
+        if (addReviewers) {
+            try {
+                const reviewers = utils.chooseReviewers(owner, config);
+                if (reviewers.length > 0) {
+                    yield pr.addReviewers(reviewers);
+                    core.info(`Added reviewers to PR #${number}: ${reviewers.join(', ')}`);
+                }
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    core.warning(error.message);
+                }
+            }
+        }
+        if (addAssignees) {
+            try {
+                const assignees = utils.chooseAssignees(owner, config);
+                if (assignees.length > 0) {
+                    yield pr.addAssignees(assignees);
+                    core.info(`Added assignees to PR #${number}: ${assignees.join(', ')}`);
+                }
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    core.warning(error.message);
+                }
+            }
+        }
+    });
+}
+exports.handlePullRequest = handlePullRequest;
+
+
+/***/ }),
+
 /***/ 5116:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -29666,6 +29784,7 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(5127));
 const github = __importStar(__nccwpck_require__(3134));
 const utils = __importStar(__nccwpck_require__(8149));
+const handler = __importStar(__nccwpck_require__(8726));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -29682,26 +29801,7 @@ function run() {
                 path: configPath,
                 ref: sha,
             });
-            const { skipKeywords, useReviewGroups, useAssigneeGroups, reviewGroups, assigneeGroups, addReviewers, addAssignees, filterLabels, runOnDraft, } = config;
-            // await handler.handlePullRequest(client, github.context, config);
-            yield client.rest.issues.createComment({
-                owner: repo.owner,
-                repo: repo.repo,
-                issue_number: prNumber,
-                body: `
-        Hello world :wave:
-        ${skipKeywords}
-        ${useReviewGroups}
-        ${useAssigneeGroups}
-        ${reviewGroups}
-        ${assigneeGroups}
-        ${addReviewers}
-        ${addAssignees}
-        ${filterLabels}
-        ${runOnDraft}
-        ${repo.owner}
-      `
-            });
+            yield handler.handlePullRequest(client, github.context, config);
         }
         catch (error) {
             if (error instanceof Error) {
@@ -29712,6 +29812,88 @@ function run() {
 }
 exports.run = run;
 run();
+
+
+/***/ }),
+
+/***/ 3913:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PullRequest = void 0;
+const core = __importStar(__nccwpck_require__(5127));
+class PullRequest {
+    constructor(client, context) {
+        this.client = client;
+        this.context = context;
+    }
+    addReviewers(reviewers) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { owner, repo, number: pull_number } = this.context.issue;
+            const result = yield this.client.rest.pulls.requestReviewers({
+                owner,
+                repo,
+                pull_number,
+                reviewers,
+            });
+            core.debug(JSON.stringify(result));
+        });
+    }
+    addAssignees(assignees) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { owner, repo, number: issue_number } = this.context.issue;
+            const result = yield this.client.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number,
+                assignees,
+            });
+            core.debug(JSON.stringify(result));
+        });
+    }
+    hasAnyLabel(labels) {
+        if (!this.context.payload.pull_request) {
+            return false;
+        }
+        const { labels: pullRequestLabels = [], } = this.context.payload.pull_request;
+        return pullRequestLabels.some(label => labels.includes(label.name));
+    }
+}
+exports.PullRequest = PullRequest;
 
 
 /***/ }),

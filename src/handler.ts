@@ -31,7 +31,7 @@ export async function handlePullRequest(
   config: Config
 ) {
   if (!context.payload.pull_request) {
-    throw new Error('the webhook payload is not exist');
+    throw new Error('the webhook payload does not exist');
   }
 
   const { pull_request: event } = context.payload as PullRequestEvent;
@@ -47,6 +47,8 @@ export async function handlePullRequest(
     filterLabels,
     runOnDraft,
   } = config;
+
+  core.info(JSON.stringify(config));
 
   if (skipKeywords && utils.includesSkipKeywords(title, skipKeywords)) {
     core.info(
