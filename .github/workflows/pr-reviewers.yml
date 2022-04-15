@@ -12,5 +12,4 @@ jobs:
       - name: Assign
         uses: anderzaj/pull-request-assigner@master
         with:
-          pr-number: ${{ github.event.number }}
           configuration-path: ".github/assign_reviewers.yml"

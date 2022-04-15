@@ -5,7 +5,6 @@ import * as handler from './handler';
 
 export async function run() {
   try {
-    const prNumber = parseInt(core.getInput('pr-number', { required: true }));
     const token = core.getInput('repo-token', { required: true });
     const configPath = core.getInput('configuration-path', {
       required: true,

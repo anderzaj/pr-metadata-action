@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import * as core from '@actions/core';
 import * as yaml from 'js-yaml';
 import { Client } from './types';
 import { Config } from './handler';

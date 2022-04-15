@@ -1,4 +1,3 @@
-import * as github from '@actions/github';
 import * as core from '@actions/core';
 import { Context } from '@actions/github/lib/context';
 import { Client } from './types'
