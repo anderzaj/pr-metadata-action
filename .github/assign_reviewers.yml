@@ -20,5 +20,6 @@ availabilityExceptions:
     - nmassardot
   friday:
     - nmassardot
+    - bimartinez
 
 useAssigneeGroups: false
