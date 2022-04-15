@@ -29714,6 +29714,9 @@ function handlePullRequest(client, context, config) {
                     yield pr.addReviewers(reviewers);
                     core.info(`Added reviewers to PR #${number}: ${reviewers.join(', ')}`);
                 }
+                else {
+                    core.info(`No reviewers available, no reviews requested.`);
+                }
             }
             catch (error) {
                 if (error instanceof Error) {
@@ -29727,6 +29730,9 @@ function handlePullRequest(client, context, config) {
                 if (assignees.length > 0) {
                     yield pr.addAssignees(assignees);
                     core.info(`Added assignees to PR #${number}: ${assignees.join(', ')}`);
+                }
+                else {
+                    core.info(`No possible assignees available, no one assigned.`);
                 }
             }
             catch (error) {
@@ -29939,26 +29945,53 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.fetchConfigurationFile = exports.chooseUsersFromGroups = exports.includesSkipKeywords = exports.chooseUsers = exports.chooseAssignees = exports.chooseReviewers = void 0;
+exports.fetchConfigurationFile = exports.chooseUsersFromGroups = exports.includesSkipKeywords = exports.chooseUsers = exports.chooseAssignees = exports.chooseReviewers = exports.getUnavailableUsers = void 0;
 const lodash_1 = __importDefault(__nccwpck_require__(5817));
+const core = __importStar(__nccwpck_require__(5127));
 const yaml = __importStar(__nccwpck_require__(9818));
+const weekdayMap = {
+    0: "sunday",
+    1: "monday",
+    2: "tuesday",
+    3: "wednesday",
+    4: "thursday",
+    5: "friday",
+    6: "saturday",
+};
+function getUnavailableUsers(availabilityExceptions) {
+    const d = new Date();
+    const day = d.getDay();
+    const dayOfWeek = weekdayMap[day];
+    const unavailableUsers = availabilityExceptions[dayOfWeek];
+    core.info(`Unavailable users for ${dayOfWeek}: ${unavailableUsers}`);
+    return unavailableUsers;
+}
+exports.getUnavailableUsers = getUnavailableUsers;
 function chooseReviewers(owner, config) {
-    const { useReviewGroups, reviewGroups, numberOfReviewers, reviewers, } = config;
-    let chosenReviewers = [];
+    const { useReviewGroups, reviewGroups, numberOfReviewers, reviewers, availabilityExceptions, } = config;
     const useGroups = useReviewGroups && Object.keys(reviewGroups).length > 0;
+    let unavailableUsers = [];
+    if (availabilityExceptions !== undefined) {
+        unavailableUsers = getUnavailableUsers(availabilityExceptions);
+    }
+    let chosenReviewers = [];
     if (useGroups) {
-        chosenReviewers = chooseUsersFromGroups(owner, reviewGroups, numberOfReviewers);
+        chosenReviewers = chooseUsersFromGroups(owner, reviewGroups, numberOfReviewers, unavailableUsers);
     }
     else {
-        chosenReviewers = chooseUsers(reviewers, numberOfReviewers, owner);
+        chosenReviewers = chooseUsers(reviewers, numberOfReviewers, owner, unavailableUsers);
     }
     return chosenReviewers;
 }
 exports.chooseReviewers = chooseReviewers;
 function chooseAssignees(owner, config) {
-    const { useAssigneeGroups, assigneeGroups, addAssignees, numberOfAssignees, numberOfReviewers, assignees, reviewers, } = config;
-    let chosenAssignees = [];
+    const { useAssigneeGroups, assigneeGroups, addAssignees, numberOfAssignees, numberOfReviewers, assignees, reviewers, availabilityExceptions, } = config;
     const useGroups = useAssigneeGroups && Object.keys(assigneeGroups).length > 0;
+    let unavailableUsers = [];
+    if (availabilityExceptions !== undefined) {
+        unavailableUsers = getUnavailableUsers(availabilityExceptions);
+    }
+    let chosenAssignees = [];
     if (typeof addAssignees === 'string') {
         if (addAssignees !== 'author') {
             throw new Error("Error in configuration file to do with using addAssignees. Expected 'addAssignees' variable to be either boolean or 'author'");
@@ -29966,16 +29999,16 @@ function chooseAssignees(owner, config) {
         chosenAssignees = [owner];
     }
     else if (useGroups) {
-        chosenAssignees = chooseUsersFromGroups(owner, assigneeGroups, numberOfAssignees || numberOfReviewers);
+        chosenAssignees = chooseUsersFromGroups(owner, assigneeGroups, numberOfAssignees || numberOfReviewers, unavailableUsers);
     }
     else {
         const candidates = assignees ? assignees : reviewers;
-        chosenAssignees = chooseUsers(candidates, numberOfAssignees || numberOfReviewers, owner);
+        chosenAssignees = chooseUsers(candidates, numberOfAssignees || numberOfReviewers, owner, unavailableUsers);
     }
     return chosenAssignees;
 }
 exports.chooseAssignees = chooseAssignees;
-function chooseUsers(candidates, desiredNumber, filterUser = '') {
+function chooseUsers(candidates, desiredNumber, filterUser = '', unavailableUsers) {
     const filteredCandidates = candidates.filter((reviewer) => {
         return reviewer !== filterUser;
     });
@@ -29995,10 +30028,10 @@ function includesSkipKeywords(title, skipKeywords) {
     return false;
 }
 exports.includesSkipKeywords = includesSkipKeywords;
-function chooseUsersFromGroups(owner, groups, desiredNumber) {
+function chooseUsersFromGroups(owner, groups, desiredNumber, unavailableUsers) {
     let users = [];
     for (const group in groups) {
-        users = users.concat(chooseUsers(groups[group], desiredNumber, owner));
+        users = users.concat(chooseUsers(groups[group], desiredNumber, owner, unavailableUsers));
     }
     return users;
 }
