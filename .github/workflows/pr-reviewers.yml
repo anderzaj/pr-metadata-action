@@ -10,6 +10,6 @@ jobs:
     name: Assign
     steps:
       - name: Assign
-        uses: examedi/pull-request-assigner@v0.1.0
+        uses: examedi/pull-request-assigner@v0.1.1
         with:
           configuration-path: ".github/assign_reviewers.yml"
