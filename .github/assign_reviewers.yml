@@ -18,7 +18,5 @@ availabilityExceptions:
     - nmassardot
   wednesday:
     - nmassardot
-  friday:
-    - nmassardot
 
 useAssigneeGroups: false
