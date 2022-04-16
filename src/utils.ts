@@ -22,7 +22,12 @@ export function getUnavailableUsers(
 
   const unavailableUsers = availabilityExceptions[dayOfWeek];
 
-  return unavailableUsers;
+  // will be undefined when availabilityExceptions is defined, but the current weekday is not in the list
+  if (unavailableUsers !== undefined) {
+    return unavailableUsers;
+  }
+
+  return [];
 }
 
 export function chooseReviewers(
