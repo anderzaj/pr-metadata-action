@@ -29949,6 +29949,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.fetchConfigurationFile = exports.chooseUsersFromGroups = exports.includesSkipKeywords = exports.chooseUsers = exports.chooseAssignees = exports.chooseReviewers = exports.getUnavailableUsers = void 0;
+const core = __importStar(__nccwpck_require__(5127));
 const lodash_1 = __importDefault(__nccwpck_require__(5817));
 const yaml = __importStar(__nccwpck_require__(9818));
 const weekdayMap = {
@@ -29966,9 +29967,11 @@ function getUnavailableUsers(availabilityExceptions) {
     const dayOfWeek = weekdayMap[day];
     const unavailableUsers = availabilityExceptions[dayOfWeek];
     if (unavailableUsers !== undefined) {
+        core.info(`undefined Unavailable users: ${unavailableUsers}`);
         return unavailableUsers;
     }
     else {
+        core.info(`defined Unavailable users: ${unavailableUsers}`);
         return [];
     }
 }
@@ -30008,7 +30011,7 @@ function chooseAssignees(owner, config, unavailableUsers) {
 exports.chooseAssignees = chooseAssignees;
 function chooseUsers(candidates, desiredNumber, filterUser = '', unavailableUsers) {
     const filteredCandidates = candidates.filter((reviewer) => {
-        return reviewer !== filterUser && !unavailableUsers.includes(reviewer);
+        return reviewer !== filterUser && (unavailableUsers && !unavailableUsers.includes(reviewer));
     });
     // all-assign
     if (desiredNumber === 0) {
