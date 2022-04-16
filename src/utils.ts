@@ -1,3 +1,4 @@
+import * as core from '@actions/core';
 import _ from 'lodash';
 import * as yaml from 'js-yaml';
 import { Client } from './types';
@@ -23,8 +24,10 @@ export function getUnavailableUsers(
   const unavailableUsers = availabilityExceptions[dayOfWeek];
 
   if (unavailableUsers !== undefined) {
+    core.info(`undefined Unavailable users: ${unavailableUsers}`);
     return unavailableUsers;
   } else {
+    core.info(`defined Unavailable users: ${unavailableUsers}`);
     return [];
   }
 }
@@ -113,7 +116,7 @@ export function chooseUsers(
   unavailableUsers: string[]
 ): string[] {
   const filteredCandidates = candidates.filter((reviewer: string): boolean => {
-    return reviewer !== filterUser && !unavailableUsers.includes(reviewer);
+    return reviewer !== filterUser && (unavailableUsers && !unavailableUsers.includes(reviewer));
   });
 
   // all-assign
