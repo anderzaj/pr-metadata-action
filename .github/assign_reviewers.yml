@@ -17,5 +17,7 @@ availabilityExceptions:
     - nmassardot
   wednesday:
     - anderzaj
+  saturday:
+    - anderzaj
 
 useAssigneeGroups: false
