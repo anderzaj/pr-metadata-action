@@ -24,12 +24,10 @@ export function getUnavailableUsers(
   const unavailableUsers = availabilityExceptions[dayOfWeek];
 
   if (unavailableUsers !== undefined) {
-    core.info(`undefined Unavailable users: ${unavailableUsers}`);
     return unavailableUsers;
-  } else {
-    core.info(`defined Unavailable users: ${unavailableUsers}`);
-    return [];
   }
+
+  return [];
 }
 
 export function chooseReviewers(
