@@ -23,7 +23,7 @@ export function getUnavailableUsers(
 
   const unavailableUsers = availabilityExceptions[dayOfWeek];
 
-  if (unavailableUsers !== undefined) {
+  if (unavailableUsers !== undefined && unavailableUsers !== null) {
     core.info(`unavailableUsers not undefined: ${unavailableUsers}`);
     return unavailableUsers;
   }
