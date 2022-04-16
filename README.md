@@ -16,7 +16,7 @@ jobs:
   add-reviewers:
     runs-on: ubuntu-latest
     steps:
-      - uses: anderzaj/pull-request-assigner@master
+      - uses: examedi/pull-request-assigner@v0.1.0
         with:
           configuration-path: '.github/some_name_for_configs.yml' # Only needed if you use something other than .github/auto_assign.yml
 ```
@@ -128,6 +128,59 @@ useAssigneeGroups: false
 # A list of keywords to be skipped the process that add reviewers if pull requests include it
 # skipKeywords:
 #   - wip
+```
+
+### Availability Exceptions
+
+If you want some users to _not_ get assigned pull requests on certain week days, you need to add said users to the list of availability exceptions.
+
+
+
+```yaml
+# Set to true to add reviewers to pull requests
+addReviewers: true
+
+# Set to true to add assignees to pull requests
+addAssignees: false
+
+# A number of reviewers added to the pull request from each group
+# Set 0 to add all the reviewers (default: 0)
+numberOfReviewers: 1
+
+# A number of assignees to add to the pull request
+# Set to 0 to add all of the assignees.
+# Uses numberOfReviewers if unset.
+# numberOfAssignees: 2
+
+# Set to true to add reviewers from different groups to pull requests
+useReviewGroups: true
+
+# A list of reviewers, split into different groups, to be added to pull requests (GitHub user name)
+reviewGroups:
+  groupA:
+    - reviewerA
+    - reviewerB
+  groupB:
+    - reviewerC
+    - reviewerD
+
+# Add users to certain days and they wont be in the pool of possible reviewers nor in the pool of possible assignees on said days
+availabilityExceptions:
+  # Since all reviewers are in monday, mondays no one will be assigned
+  monday:
+    - reviewerA
+    - reviewerB
+    - reviewerC
+    - reviewerD
+  # Since both reviewers from group A are in tuesday, only 1 reviewer from group B will be assigned
+  tuesday:
+    - reviewerA
+    - reviewerB
+  # Since reviewer A is in friday, he will be removed from the pool of possible assignees for pull requests opened on fridays
+  friday:
+    - reviewerA
+
+# If a week day isn't present (like in this example wednesday, thursday, saturday and sunday) that day all reviewers will be available
 ```
 
 ### Assign Author as Assignee
