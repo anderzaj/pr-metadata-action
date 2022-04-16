@@ -29965,7 +29965,12 @@ function getUnavailableUsers(availabilityExceptions) {
     const day = d.getDay();
     const dayOfWeek = weekdayMap[day];
     const unavailableUsers = availabilityExceptions[dayOfWeek];
-    return unavailableUsers;
+    if (unavailableUsers !== undefined) {
+        return unavailableUsers;
+    }
+    else {
+        return [];
+    }
 }
 exports.getUnavailableUsers = getUnavailableUsers;
 function chooseReviewers(owner, config, unavailableUsers) {

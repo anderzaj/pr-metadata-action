@@ -22,7 +22,11 @@ export function getUnavailableUsers(
 
   const unavailableUsers = availabilityExceptions[dayOfWeek];
 
-  return unavailableUsers;
+  if (unavailableUsers !== undefined) {
+    return unavailableUsers;
+  } else {
+    return [];
+  }
 }
 
 export function chooseReviewers(
