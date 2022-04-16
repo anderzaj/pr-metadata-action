@@ -18,6 +18,5 @@ availabilityExceptions:
   wednesday:
     - anderzaj
   saturday:
-    - anderzaj
 
 useAssigneeGroups: false
