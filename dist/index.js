@@ -29967,13 +29967,11 @@ function getUnavailableUsers(availabilityExceptions) {
     const dayOfWeek = weekdayMap[day];
     const unavailableUsers = availabilityExceptions[dayOfWeek];
     if (unavailableUsers !== undefined) {
-        core.info(`undefined Unavailable users: ${unavailableUsers}`);
+        core.info(`unavailableUsers not undefined: ${unavailableUsers}`);
         return unavailableUsers;
     }
-    else {
-        core.info(`defined Unavailable users: ${unavailableUsers}`);
-        return [];
-    }
+    core.info(`unavailableUsers undefined: ${unavailableUsers}`);
+    return [];
 }
 exports.getUnavailableUsers = getUnavailableUsers;
 function chooseReviewers(owner, config, unavailableUsers) {

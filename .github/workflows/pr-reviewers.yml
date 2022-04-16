@@ -10,6 +10,6 @@ jobs:
     name: Assign
     steps:
       - name: Assign
-        uses: anderzaj/pull-request-assigner@master
+        uses: anderzaj/pull-request-assigner@fix/undefined-unavailable-users
         with:
           configuration-path: ".github/assign_reviewers.yml"

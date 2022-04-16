@@ -9,7 +9,6 @@ useReviewGroups: true
 reviewGroups:
   groupA:
     - anderzaj
-    - bimartinez
   groupB:
     - nmassardot
 
