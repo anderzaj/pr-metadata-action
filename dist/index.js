@@ -29966,14 +29966,12 @@ function getUnavailableUsers(availabilityExceptions) {
     const day = d.getDay();
     const dayOfWeek = weekdayMap[day];
     const unavailableUsers = availabilityExceptions[dayOfWeek];
-    if (unavailableUsers !== undefined) {
-        core.info(`undefined Unavailable users: ${unavailableUsers}`);
+    if (unavailableUsers !== undefined && unavailableUsers !== null) {
+        core.info(`unavailableUsers not undefined: ${unavailableUsers}`);
         return unavailableUsers;
     }
-    else {
-        core.info(`defined Unavailable users: ${unavailableUsers}`);
-        return [];
-    }
+    core.info(`unavailableUsers undefined: ${unavailableUsers}`);
+    return [];
 }
 exports.getUnavailableUsers = getUnavailableUsers;
 function chooseReviewers(owner, config, unavailableUsers) {

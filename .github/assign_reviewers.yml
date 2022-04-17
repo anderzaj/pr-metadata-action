@@ -9,13 +9,12 @@ useReviewGroups: true
 reviewGroups:
   groupA:
     - anderzaj
-    - bimartinez
   groupB:
-    - nmassardot
+    - mnfriedl
 
 availabilityExceptions:
   monday:
-    - nmassardot
+    - mnfriedl
   wednesday:
     - anderzaj
 
