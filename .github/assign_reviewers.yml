@@ -10,13 +10,12 @@ reviewGroups:
   groupA:
     - anderzaj
   groupB:
-    - nmassardot
+    - mnfriedl
 
 availabilityExceptions:
   monday:
-    - nmassardot
+    - mnfriedl
   wednesday:
     - anderzaj
-  saturday:
 
 useAssigneeGroups: false
