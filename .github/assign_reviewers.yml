@@ -18,6 +18,8 @@ availabilityExceptions:
   wednesday:
     - anderzaj
   saturday:
+    - mnfriedl
   sunday:
+    - mnfriedl
 
 useAssigneeGroups: false
