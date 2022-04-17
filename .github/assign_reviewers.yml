@@ -17,5 +17,7 @@ availabilityExceptions:
     - mnfriedl
   wednesday:
     - anderzaj
+  saturday:
+  sunday:
 
 useAssigneeGroups: false
